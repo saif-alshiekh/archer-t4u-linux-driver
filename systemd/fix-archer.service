@@ -4,8 +4,9 @@ After=network.target
 
 [Service]
 Type=oneshot
-ExecStart=/bin/bash -c '[ -f /lib/modules/$(uname -r)/kernel/drivers/net/wireless/realtek/rtl88x2bu/88x2bu.ko.xz ] || /home/salshiekh/archer-t4u-linux-driver/fix_driver.sh'
+ExecStart=/bin/bash -c '[ -f /lib/modules/$(uname -r)/updates/dkms/88x2bu.ko.zst ] || ~/archer-t4u-linux-driver/fix_driver.sh'
 RemainAfterExit=true
 
 [Install]
 WantedBy=multi-user.target
+
