@@ -1,6 +1,3 @@
-Absolutely! Here's the entire `README.md` in **pure Markdown format**, ready for you to paste directly into your repo:
-
-
 # Archer T4U Linux Driver Installer (RTL88x2BU)
 
 This project provides an **easy-to-use setup** for getting the TP-Link Archer T4U (and other RTL88x2BU-based adapters) working reliably on **Linux** systems, including **Raspberry Pi 5**, **Ubuntu**, and other distros.
@@ -30,75 +27,90 @@ chmod +x install.sh
 ./install.sh
 ````
 
-After it installs, **reboot**:
+Then reboot:
 
 ```bash
 sudo reboot
 ```
 
-Then run:
+Check network interfaces:
 
 ```bash
 nmcli device
 ```
 
-You should now see your Archer T4U Wi-Fi interface (`wlan0` or `wlx...`).
+You should see your Archer T4U device (e.g., `wlan0`, `wlx...`, etc.).
 
 ---
 
 ## 🛠 Fix After Kernel Update
 
-If the Wi-Fi stops working after a kernel upgrade:
+If Wi-Fi stops working after a kernel upgrade:
 
 ```bash
 ./fix_driver.sh
 ```
 
+This will:
+
+* Remove old dkms version
+* Rebuild and install the driver
+* Verify with `lsmod | grep 88x2bu` and `nmcli device`
+
 ---
 
 ## 🔁 Optional: Auto-Fix on Boot Using systemd
 
-1. Copy the service to systemd:
+Enable the systemd service for automatic driver reinstallation if needed:
 
-   ```bash
-   sudo cp systemd/fix-archer.service /etc/systemd/system/
-   ```
+```bash
+sudo cp systemd/fix-archer-t4u.service /etc/systemd/system/
+sudo systemctl enable fix-archer-t4u.service
+```
 
-2. Enable the service:
-
-   ```bash
-   sudo systemctl enable fix-archer.service
-   ```
-
-3. On next boot, if the driver is missing, it will be reinstalled automatically.
+It will run the fix script automatically after boot if needed.
 
 ---
 
 ## 📁 Repo Structure
 
-| File                         | Purpose                                       |
-| ---------------------------- | --------------------------------------------- |
-| `install.sh`                 | Installs driver from source with dependencies |
-| `fix_driver.sh`              | Repairs the driver (after kernel update)      |
-| `systemd/fix-archer.service` | Optional systemd unit to auto-repair on boot  |
+| File                             | Purpose                                       |
+| -------------------------------- | --------------------------------------------- |
+| `install.sh`                     | Installs driver from source with dependencies |
+| `fix_driver.sh`                  | Repairs the driver (after kernel update)      |
+| `systemd/fix-archer-t4u.service` | Optional systemd unit to auto-repair on boot  |
 
 ---
 
-## 💡 Notes
+## 💻 Compatibility & Notes
 
-* Based on the awesome driver repo by [morrownr](https://github.com/morrownr/88x2bu-20210702).
-* This project simplifies installation and long-term maintenance for casual users.
-* Tested on: **Ubuntu 24.04**, **Raspberry Pi 5**, **Linux Kernel 6.8+**
+* ✅ Tested on **Raspberry Pi 5** running **Ubuntu 24.04 LTS** with **Linux Kernel 6.8+**
+* ✅ Works on **any Ubuntu version or derivative**
+* ✅ Works on other modern **Linux distros** that support DKMS and gcc
+* ❌ Secure Boot is **not supported** (module signing not available)
+
+To ensure compatibility:
+
+* Your kernel headers should be installed.
+* GCC should match the kernel's compile version.
+* `mokutil` and `kmodsign` are optional but help in secure systems.
 
 ---
 
 ## 🤝 Contributions Welcome
 
-If you have improvements, fixes, or support for other distros — feel free to open a PR!
+Feel free to open pull requests or issues to support more distros, improve installation scripts, or optimize driver performance.
 
 ---
 
 ## 🧑‍💻 Author
 
 **Saif Alshiekh**
-🌐 [github.com/saif-alshiekh](https://github.com/saif-alshiekh)
+GitHub: [github.com/saif-alshiekh](https://github.com/saif-alshiekh)
+
+---
+
+### Credits
+
+This driver and its logic are based on the fantastic work by [morrownr](https://github.com/morrownr/88x2bu-20210702), adapted and simplified for Raspberry Pi 5 and modern Ubuntu use.
+
